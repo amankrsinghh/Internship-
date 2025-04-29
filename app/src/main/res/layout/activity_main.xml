@@ -7,11 +7,33 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
+    android:background="#03A9F4"
     android:gravity="center">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_marginBottom="15dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Your UserName"
+        android:textColorHint="#FFFFFF"
+        android:layout_marginBottom="15dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Your Password"
+        android:textColorHint="#FFFFFF"
+        android:layout_marginBottom="15dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task1"/>
+        android:backgroundTint="#FF5722"
+        android:text="Login" />
 
 </LinearLayout>
