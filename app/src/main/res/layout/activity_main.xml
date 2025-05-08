@@ -7,33 +7,46 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    android:background="#03A9F4"
+    android:background="#172129"
     android:gravity="center">
-
-
-    <ImageView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars"
-        android:layout_marginBottom="15dp"/>
+        android:text="WEATHER APP"
+        android:textSize="30sp"
+        android:layout_marginBottom="100sp"
+        android:textColor="@color/white"
+        />
 
-    <EditText
+    <ImageView
+        android:layout_width="216dp"
+        android:layout_height="230dp"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/baseline_cloudy_snowing_24"/>
+
+    <TextView
+        android:id="@+id/tvWeatherResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Your UserName"
-        android:textColorHint="#FFFFFF"
-        android:layout_marginBottom="15dp"/>
+        android:text="Weather update"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_marginBottom="100dp"/>
+"
     <EditText
+        android:id="@+id/etCityName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Your Password"
-        android:textColorHint="#FFFFFF"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="15dp"
+        android:hint="Enetr City Name"
+        android:gravity="center"
+        android:textColorHint="#FFFFFF" />
 
     <Button
+        android:id="@+id/btnFetchWeather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#FF5722"
-        android:text="Login" />
+        android:text="Get Weather " />
 
 </LinearLayout>
