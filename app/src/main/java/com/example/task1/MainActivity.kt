@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         //        6c9fd2bc97171b2de86ce0cd7a07f050
-        val apiKey = "6c9fd2bc97171b2de86ce0cd7a07f050" // Replace with your OpenWeather API key
+        val apiKey = "" // Replace with your OpenWeather API key
         val url =
             "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apiKey"
 
