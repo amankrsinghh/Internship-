@@ -1,100 +1,95 @@
-package com.example.task1;
+package com.example.task1
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.android.volley.Request
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONObject
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+class MainActivity : AppCompatActivity() {
+    private var etCityName: EditText? = null
+    private var btnFetchWeather: Button? = null
+    private var tvWeatherResult: TextView? = null
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
-
-public class MainActivity extends AppCompatActivity {
-    private EditText etCityName;
-    private Button btnFetchWeather;
-    private TextView tvWeatherResult;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
 
 
         // Initialize UI components
-        etCityName = findViewById(R.id.etCityName);
-        btnFetchWeather = findViewById(R.id.btnFetchWeather);
-        tvWeatherResult = findViewById(R.id.tvWeatherResult);
+        etCityName = findViewById(R.id.etCityName)
+        btnFetchWeather = findViewById(R.id.btnFetchWeather)
+        tvWeatherResult = findViewById(R.id.tvWeatherResult)
+
+        btnFetchWeather?.setOnClickListener(View.OnClickListener { fetchWeatherData() })
 
 
-        btnFetchWeather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchWeatherData();
-            }
-        });
-
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-    }
-
-
-    private void fetchWeatherData() {
-        String cityName = etCityName.getText().toString().trim();
-        if (cityName.isEmpty()) {
-            tvWeatherResult.setText("Please enter a city name");
-            return;
+        ViewCompat.setOnApplyWindowInsetsListener(
+            findViewById(R.id.main)
+        ) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
-//        6c9fd2bc97171b2de86ce0cd7a07f050
-        String apiKey = "";  // Replace with your OpenWeather API key
-        String url = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + apiKey;
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    // Handle API response
-                    tvWeatherResult.setText(parseWeatherResponse(response));
-                },
-                error -> {
-                    // Handle errors
-                    tvWeatherResult.setText("Failed to fetch weather. Please try again.");
-                });
-
-        requestQueue.add(stringRequest);
     }
 
 
-    private String parseWeatherResponse(String response) {
+    private fun fetchWeatherData() {
+        val cityName = etCityName!!.text.toString().trim { it <= ' ' }
+        if (cityName.isEmpty()) {
+            tvWeatherResult!!.text = "Please enter a city name"
+            return
+        }
+        //        6c9fd2bc97171b2de86ce0cd7a07f050
+        val apiKey = "6c9fd2bc97171b2de86ce0cd7a07f050" // Replace with your OpenWeather API key
+        val url =
+            "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apiKey"
+
+        val requestQueue = Volley.newRequestQueue(this)
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response: String ->
+                // Handle API response
+                tvWeatherResult!!.text = parseWeatherResponse(response)
+            },
+            { error: VolleyError? ->
+                // Handle errors
+                tvWeatherResult!!.text = "Failed to fetch weather. Please try again."
+            })
+
+        requestQueue.add(stringRequest)
+    }
+
+
+    private fun parseWeatherResponse(response: String): String {
         try {
-            JSONObject jsonObject = new JSONObject(response);
-            String cityName = jsonObject.getString("name");
-            JSONObject main = jsonObject.getJSONObject("main");
-            double temperature = main.getDouble("temp") - 273.15;  // Convert Kelvin to Celsius
-            double humidity = main.getDouble("humidity");
+            val jsonObject = JSONObject(response)
+            val cityName = jsonObject.getString("name")
+            val main = jsonObject.getJSONObject("main")
+            val temperature = main.getDouble("temp") - 273.15 // Convert Kelvin to Celsius
+            val humidity = main.getDouble("humidity")
 
-            JSONObject weather = jsonObject.getJSONArray("weather").getJSONObject(0);
-            String description = weather.getString("description");
+            val weather = jsonObject.getJSONArray("weather").getJSONObject(0)
+            val description = weather.getString("description")
 
-            return "City: " + cityName + "\n" +
-                    "Temperature: " + String.format("%.2f", temperature) + "°C\n" +
-                    "Humidity: " + humidity + "%\n" +
-                    "Description: " + description;
-        } catch (Exception e) {
-            return "Failed to parse weather data";
+            return """
+                City: $cityName
+                Temperature: ${String.format("%.2f", temperature)}°C
+                Humidity: $humidity%
+                Description: $description
+                """.trimIndent()
+        } catch (e: Exception) {
+            return "Failed to parse weather data"
         }
     }
 }
